@@ -2,7 +2,7 @@
   "title": "QRScout",
   "page_title": "Rebuilt",
   "delimiter": "\t",
-  "teamNumber": 2713,
+  "teamNumber": 3467,
   "floatingField": {
     "show": false,
     "codeValue": "teamNumber"
@@ -41,7 +41,7 @@
       "card_foreground": "0 0% 98%",
       "popover": "0 0% 3.9%",
       "popover_foreground": "0 0% 98%",
-      "primary": "354.44 71.3% 47.9%",
+      "primary": "(47, 96%, 50%",
       "primary_foreground": "0 85.7% 97.3%",
       "secondary": "0 0% 14.9%",
       "secondary_foreground": "0 0% 98%",
@@ -101,13 +101,13 @@
           "formResetBehavior": "reset",
           "defaultValue": "",
           "choices": {
-            "OT": "Outpost Trench",
-            "OBFT": "Outpost Bump Favoring Trench",
-            "OBFH": "Outpost Bump Favoring Hub",
-            "H": "Hub",
-            "DBFH": "Depot Bump Favoring Hub",
-            "DBFT": "Depot Bump Favoring Trench",
-            "DT": "Depot Trench"
+            "OT": "A. Outpost Trench",
+            "OBFT": "B. Outpost Bump Favoring Trench",
+            "OBFH": "C. Outpost Bump Favoring Hub",
+            "H": "D. Hub",
+            "DBFH": "E. Depot Bump Favoring Hub",
+            "DBFT": "F. Depot Bump Favoring Trench",
+            "DT": "G. Depot Trench"
           }
         },
         {
@@ -118,6 +118,18 @@
           "code": "noShow",
           "formResetBehavior": "reset",
           "defaultValue": false
+        },
+        {
+          "title": "Field Layout",
+          "description": "Reference diagram of the field",
+          "type": "image",
+          "required": true,
+          "code": "fieldLayout",
+          "formResetBehavior": "preserve",
+          "defaultValue": "https://image2url.com/r2/default/images/1771538684944-03d170fa-e4b6-4192-8ca7-c460a3c4eb2a.png",
+          "width": 300,
+          "height": 150,
+          "alt": "2026 FRC Field Layout Diagram"
         }
       ]
     },
@@ -125,49 +137,33 @@
       "name": "Autonomous",
       "fields": [
         {
-          "title": "Fuel Scored",
-          "description": "Approximate fuel scored during autonomous.",
-          "type": "multi-counter",
+          "title": "Actions",
+          "description": "Track actions performed during autonomous.",
+          "type": "action-tracker",
           "required": false,
-          "code": "autoFuelScored",
+          "code": "autoActions",
           "formResetBehavior": "reset",
-          "defaultValue": 0
-        },
-        {
-          "title": "Where Collected Fuel",
-          "description": "Areas where fuel was collect from during autonomous",
-          "type": "multi-select",
-          "required": false,
-          "code": "autoCollectLoc",
-          "formResetBehavior": "reset",
-          "choices": {
-            "1": "Outpost",
-            "2": "Depot",
-            "3": "Neutral Zone",
-            "4": "Neutral Zone 2nd Pass"
-          }
-        },
-        {
-          "title": "Other Auto Actions",
-          "description": "Additional actions completed during autonomous",
-          "type": "multi-select",
-          "required": false,
-          "code": "autoAdditionAct",
-          "formResetBehavior": "reset",
-          "choices": {
-            "1": "Passed",
-            "2": "Bump",
-            "3": "Trench"
-          }
-        },
-        {
-          "title": "Robot Stuck or Astop in Auto?",
-          "description": "Did robot get stuck in Auto or have to be Astopped?",
-          "type": "boolean",
-          "required": false,
-          "code": "autoStuck",
-          "formResetBehavior": "reset",
-          "defaultValue": false
+          "defaultValue": null,
+          "mode": "hold",
+          "actions": [
+            {
+              "label": "Scoring",
+              "code": "scoring"
+            },
+            {
+              "label": "Ground Collect",
+              "code": "ground_collect"
+            },
+            {
+              "label": "Passing",
+              "code": "passing"
+            },
+            {
+              "label": "Climbing",
+              "code": "climbing"
+            }
+          ],
+          "timerDuration": 20
         },
         {
           "title": "Climbed",
@@ -179,10 +175,23 @@
           "defaultValue": "No",
           "choices": {
             "No": "No Climb",
+            "Yes": "Climb",
+            "F": "Failed Climb"
+          }
+        },
+        {
+          "title": "Where Climbed",
+          "description": "Where on the tower did the robot climb in autonomous?",
+          "type": "select",
+          "required": false,
+          "code": "autoClimbPos",
+          "formResetBehavior": "reset",
+          "defaultValue": "No",
+          "choices": {
+            "No": "No Climb",
             "Out": "Output Side",
             "Mid": "Middle",
-            "Dep": "Depot Side",
-            "F": "Failed Climb"
+            "Dep": "Depot Side"
           }
         }
       ]
@@ -190,15 +199,6 @@
     {
       "name": "Teleop",
       "fields": [
-        {
-          "title": "Alliance won auto?",
-          "description": "Did your alliance win the autonomous period?",
-          "type": "boolean",
-          "required": false,
-          "code": "allianceWonAuto",
-          "formResetBehavior": "reset",
-          "defaultValue": false
-        },
         {
           "title": "Actions",
           "description": "Track actions performed during teleop.",
@@ -210,67 +210,77 @@
           "mode": "hold",
           "actions": [
             {
-              "label": "Faffing & Stuck",
-              "code": "faffing"
+              "label": "Scoring",
+              "code": "scoring"
+            },
+            {
+              "label": "Passing",
+              "code": "passing"
+            },
+            {
+              "label": "Climbing",
+              "code": "climbing"
             },
             {
               "label": "Defense",
               "code": "defense"
             }
           ],
-          "timerDuration": 135,
-          "autoStopSeconds": 150
+          "timerDuration": 135
         },
         {
-          "title": "Fuel Scored",
-          "description": "Approximate fuel scored during teleop.",
-          "type": "multi-counter",
-          "required": false,
-          "code": "teleopFuelScored",
-          "formResetBehavior": "reset",
-          "defaultValue": 0
-        },
-        {
-          "title": "Bump / Trench",
-          "description": "Did the robot go under the bump or over the trench at least once during the match?",
-          "type": "multi-select",
-          "required": false,
-          "code": "teleBumpTrench",
-          "formResetBehavior": "reset",
-          "choices": {
-            "1": "Bump",
-            "2": "Trench"
-          }
-        },
-        {
-          "title": "Defended by opponent?",
-          "description": "Was the robot defended by an opponent during the match?",
+          "title": "Crossed into opposite zone?",
+          "description": "Did the robot cross into the opposing alliance's zone?",
           "type": "boolean",
           "required": false,
-          "code": "robotDefended",
+          "code": "crossedZone",
           "formResetBehavior": "reset",
           "defaultValue": false
         },
         {
-          "title": "Fuel Fed (Herded & Passed)",
-          "description": "Approximate fuel fed either by shooter or bumper herding during teleop.",
-          "type": "multi-counter",
+          "title": "Mechanical Issue?",
+          "description": "Did the robot have a mechanical issue during the match?",
+          "type": "boolean",
           "required": false,
-          "code": "teleopFuelFed",
+          "code": "mechIssue",
           "formResetBehavior": "reset",
-          "defaultValue": 0
+          "defaultValue": false
         },
         {
-          "title": "Opposing Zone Actions",
-          "description": "If the robot went into the opposing zone, what actions were completed?",
-          "type": "multi-select",
+          "title": "Stuck on fuel (less than 10 seconds)?",
+          "description": "Did the robot get stuck on fuel during the match for less than 10 seconds?",
+          "type": "boolean",
           "required": false,
-          "code": "teleOpposingActs",
+          "code": "Stuck10-",
           "formResetBehavior": "reset",
-          "choices": {
-            "1": "Collecting",
-            "2": "Defense"
-          }
+          "defaultValue": false
+        },
+        {
+          "title": "Stuck on fuel (more than 10 seconds)?",
+          "description": "Did the robot get stuck on fuel during the match for more than 10 seconds?",
+          "type": "boolean",
+          "required": false,
+          "code": "Stuck10+",
+          "formResetBehavior": "reset",
+          "defaultValue": false
+        },
+        {
+          "title": "Died?",
+          "description": "Did the robot die during the match?",
+          "type": "boolean",
+          "required": false,
+          "code": "died",
+          "formResetBehavior": "reset",
+          "defaultValue": false
+        },
+        {
+          "title": "Tipped/Fell Over",
+          "description": "Did the robot tip or fall over during the match?",
+          "type": "boolean",
+          "required": false,
+          "code": "tipped",
+          "formResetBehavior": "reset",
+          "defaultValue": false
         }
       ]
     },
@@ -307,33 +317,6 @@
             "Mid": "Middle",
             "Dep": "Depot Side"
           }
-        },
-        {
-          "title": "Mechanical Issue?",
-          "description": "Did the robot have a mechanical issue during the match?",
-          "type": "boolean",
-          "required": false,
-          "code": "mechIssue",
-          "formResetBehavior": "reset",
-          "defaultValue": false
-        },
-        {
-          "title": "Died?",
-          "description": "Did the robot die during the match?",
-          "type": "boolean",
-          "required": false,
-          "code": "died",
-          "formResetBehavior": "reset",
-          "defaultValue": false
-        },
-        {
-          "title": "Tipped/Fell Over",
-          "description": "Did the robot tip or fall over during the match?",
-          "type": "boolean",
-          "required": false,
-          "code": "tipped",
-          "formResetBehavior": "reset",
-          "defaultValue": false
         }
       ]
     },
@@ -351,66 +334,6 @@
           "min": 0,
           "max": 5,
           "step": 1
-        },
-        {
-          "title": "Scored How?",
-          "description": "How did the robot score?",
-          "type": "select",
-          "required": false,
-          "code": "scoredHow",
-          "formResetBehavior": "reset",
-          "defaultValue": "blank",
-          "choices": {
-            "blank": "(blank)",
-            "driving": "While driving",
-            "stationary": "While stationary",
-            "both": "Both",
-            "none": "No scoring"
-          }
-        },
-        {
-          "title": "Scoring Location",
-          "description": "What locations in alliance zone did the robot score from?",
-          "type": "multi-select",
-          "required": false,
-          "code": "teleScoreLoc",
-          "formResetBehavior": "reset",
-          "choices": {
-            "1": "Outpost Trench",
-            "2": "Outpost",
-            "3": "Hub",
-            "4": "Ladder",
-            "5": "Depot",
-            "6": "Depot Trench"
-          }
-        },
-        {
-          "title": "Feeding/Passing Skill",
-          "description": "Rate the robot's feeding skill.",
-          "type": "range",
-          "required": false,
-          "code": "feedingSkill",
-          "formResetBehavior": "reset",
-          "defaultValue": 3,
-          "min": 0,
-          "max": 5,
-          "step": 1
-        },
-        {
-          "title": "Passed How?",
-          "description": "How did the robot pass with their shooter (i.e. not herding balls with bumpers)?",
-          "type": "select",
-          "required": false,
-          "code": "passedHow",
-          "formResetBehavior": "reset",
-          "defaultValue": "blank",
-          "choices": {
-            "blank": "(blank)",
-            "driving": "While driving",
-            "stationary": "While stationary",
-            "both": "Both",
-            "none": "No Passing"
-          }
         },
         {
           "title": "Defense Skill",
@@ -440,7 +363,7 @@
         {
           "title": "Comments",
           "type": "text",
-          "required": true,
+          "required": false,
           "code": "co",
           "formResetBehavior": "reset",
           "defaultValue": "",
