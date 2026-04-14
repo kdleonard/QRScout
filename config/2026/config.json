@@ -2,7 +2,7 @@
   "title": "QRScout",
   "page_title": "Rebuilt",
   "delimiter": "\t",
-  "teamNumber": 3467.6201,
+  "teamNumber": 3467,
   "floatingField": {
     "show": false,
     "codeValue": "teamNumber"
