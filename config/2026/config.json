@@ -75,6 +75,23 @@
           "defaultValue": ""
         },
         {
+          "title": "Driver Station",
+          "description": "If you are scouting the same driver station each match, choose here",
+          "type": "select",
+          "required": false,
+          "code": "driverStation",
+          "formResetBehavior": "preserve",
+          "defaultValue": "",
+          "choices": {
+            "R1": "Red 1",
+            "R2": "Red 2",
+            "R3": "Red 3",
+            "B1": "Blue 1",
+            "B2": "Blue 2",
+            "B3": "Blue 3"
+          }
+        },
+        {
           "title": "Match Number",
           "description": "Select the match number.",
           "type": "TBA-match-number",
