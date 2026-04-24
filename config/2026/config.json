@@ -2,7 +2,7 @@
   "title": "QRScout",
   "page_title": "Rebuilt",
   "delimiter": "\t",
-  "teamNumber": 3467,
+  "teamNumber": 6329,
   "floatingField": {
     "show": false,
     "codeValue": "teamNumber"
@@ -15,7 +15,7 @@
       "card_foreground": "0 0% 3.9%",
       "popover": "0 0% 100%",
       "popover_foreground": "0 0% 3.9%",
-      "primary": "354.44 71.3% 47.9%",
+      "primary": "266.5 48.5% 44.9%",
       "primary_foreground": "0 85.7% 97.3%",
       "secondary": "0 0% 96.1%",
       "secondary_foreground": "0 0% 9%",
@@ -41,7 +41,7 @@
       "card_foreground": "0 0% 98%",
       "popover": "0 0% 3.9%",
       "popover_foreground": "0 0% 98%",
-      "primary": "354.44 71.3% 47.9%",
+      "primary": "266.5 48.5% 44.9%",
       "primary_foreground": "0 85.7% 97.3%",
       "secondary": "0 0% 14.9%",
       "secondary_foreground": "0 0% 98%",
@@ -67,7 +67,7 @@
       "fields": [
         {
           "title": "Scouter Initials",
-          "description": "Enter the initials of the scouter.",
+          "description": "Enter your initials.",
           "type": "text",
           "required": true,
           "code": "scouter",
@@ -118,38 +118,22 @@
           "formResetBehavior": "reset",
           "defaultValue": "",
           "choices": {
-            "OT": "A. Outpost Trench",
-            "OBFT": "B. Outpost Bump Favoring Trench",
-            "OBFH": "C. Outpost Bump Favoring Hub",
-            "H": "D. Hub",
-            "DBFH": "E. Depot Bump Favoring Hub",
-            "DBFT": "F. Depot Bump Favoring Trench",
-            "DT": "G. Depot Trench"
+            "OT": "Outpost Trench",
+            "OB": "Outpost Bump",
+            "H": "Hub",
+            "DB": "Depot Bump",
+            "DT": "Depot Trench",
+            "NS": "No Show"
           }
         },
         {
-          "title": "Field Layout: Red",
-          "description": "Reference diagram of the field",
-          "type": "image",
+          "title": "No Show",
+          "description": "Check if the robot is not on the field.",
+          "type": "boolean",
           "required": false,
-          "code": "fieldLayoutR",
-          "formResetBehavior": "preserve",
-          "defaultValue": "https://i.ibb.co/7Jh1hZXL/Scouting-Field-Map-Layout.png",
-          "width": 300,
-          "height": 150,
-          "alt": "2026 FRC Field Layout Diagram"
-        },
-        {
-          "title": "Field Layout: Blue",
-          "description": "Reference diagram of the field",
-          "type": "image",
-          "required": false,
-          "code": "fieldLayoutB",
-          "formResetBehavior": "preserve",
-          "defaultValue": "https://i.ibb.co/Ldg8Jcbt/Scouting-Field-Map-Layout-2.png",
-          "width": 300,
-          "height": 150,
-          "alt": "2026 FRC Field Layout Diagram"
+          "code": "noShow",
+          "formResetBehavior": "reset",
+          "defaultValue": false
         }
       ]
     },
@@ -164,26 +148,51 @@
           "code": "autoActions",
           "formResetBehavior": "reset",
           "defaultValue": null,
-          "mode": "hold",
+          "mode": "tap",
           "actions": [
             {
-              "label": "Scoring",
-              "code": "scoring"
+              "label": "Cycles",
+              "code": "scoring",
+              "icon": "fuel"
             },
             {
-              "label": "Ground Collect",
-              "code": "ground_collect"
+              "label": "Depot Collect",
+              "code": "depot_collect",
+              "icon": "warehouse"
             },
             {
-              "label": "Stuck on fuel or bump",
-              "code": "stuck"
+              "label": "Outpost Collect",
+              "code": "outpost_collect",
+              "icon": "square-chevron-down"
             },
             {
-              "label": "Climbing",
-              "code": "climbing"
+              "label": "Neutral Zone Collect",
+              "code": "ground_collect_neutral",
+              "icon": "corner-right-up"
+            },
+            {
+              "label": "Passing",
+              "code": "passing",
+              "icon": "redo"
+            },
+            {
+              "label": "Faffing/Stuck on Fuel",
+              "code": "faffing",
+              "icon": "trash-2"
             }
           ],
           "timerDuration": 20
+        },
+        {
+          "title": "Fuel Scored in Auto?",
+          "description": "The number of fuel scored in autonomous.",
+          "type": "counter",
+          "required": false,
+          "code": "autoFuelScored",
+          "formResetBehavior": "reset",
+          "defaultValue": 0,
+          "min": 0,
+          "step": 2
         },
         {
           "title": "Climbed",
@@ -213,6 +222,20 @@
             "Mid": "Middle",
             "Dep": "Depot Side"
           }
+        },
+        {
+          "title": "Did They Cross Midfield Line?",
+          "description": "Did the robot cross the midfield line during their autonomous path",
+          "type": "select",
+          "required": false,
+          "code": "autoMidCross",
+          "formResetBehavior": "reset",
+          "defaultValue": "No",
+          "choices": {
+            "No": "Did Not Cross Midfield",
+            "Mid": "Cross Midfield But Not Fully",
+            "Yes": "Fully Cross Midfield Line"
+          }
         }
       ]
     },
@@ -227,86 +250,42 @@
           "code": "teleopActions",
           "formResetBehavior": "reset",
           "defaultValue": null,
-          "mode": "hold",
+          "mode": "tap",
           "actions": [
             {
-              "label": "Scoring",
-              "code": "scoring"
+              "label": "Cycles",
+              "code": "scoring",
+              "icon": "fuel"
             },
             {
               "label": "Passing",
-              "code": "passing"
-            },
-            {
-              "label": "Robot Inactive",
-              "code": "robot inactive"
+              "code": "passing",
+              "icon": "redo"
             },
             {
               "label": "Defense",
-              "code": "defense"
+              "code": "defense",
+              "icon": "sword"
+            },
+            {
+              "label": "Faffing/Stuck on Fuel",
+              "code": "faffing",
+              "icon": "trash-2"
             }
           ],
-          "timerDuration": 135
+          "timerDuration": 140
         },
         {
-          "title": "Crossed into opposite zone?",
-          "description": "Did the robot cross into the opposing alliance's zone?",
-          "type": "boolean",
+          "title": "Fuel Scored in Teleop?",
+          "description": "The number of fuel scored in teleop.",
+          "type": "counter",
           "required": false,
-          "code": "crossedZone",
+          "code": "teleFuelScored",
           "formResetBehavior": "reset",
-          "defaultValue": false
+          "defaultValue": 0,
+          "min": 0,
+          "step": 5
         },
-        {
-          "title": "Mechanical Issue?",
-          "description": "Did the robot have a mechanical issue during the match?",
-          "type": "boolean",
-          "required": false,
-          "code": "mechIssue",
-          "formResetBehavior": "reset",
-          "defaultValue": false
-        },
-        {
-          "title": "Stuck on fuel (less than 10 seconds)?",
-          "description": "Did the robot get stuck on fuel during the match for less than 10 seconds?",
-          "type": "boolean",
-          "required": false,
-          "code": "Stuck10-",
-          "formResetBehavior": "reset",
-          "defaultValue": false
-        },
-        {
-          "title": "Stuck on fuel (more than 10 seconds)?",
-          "description": "Did the robot get stuck on fuel during the match for more than 10 seconds?",
-          "type": "boolean",
-          "required": false,
-          "code": "Stuck10+",
-          "formResetBehavior": "reset",
-          "defaultValue": false
-        },
-        {
-          "title": "Died?",
-          "description": "Did the robot die during the match?",
-          "type": "boolean",
-          "required": false,
-          "code": "died",
-          "formResetBehavior": "reset",
-          "defaultValue": false
-        },
-        {
-          "title": "Tipped/Fell Over",
-          "description": "Did the robot tip or fall over during the match?",
-          "type": "boolean",
-          "required": false,
-          "code": "tipped",
-          "formResetBehavior": "reset",
-          "defaultValue": false
-        }
-      ]
-    },
-    {
-      "name": "Endgame",
-      "fields": [
         {
           "title": "Climbed",
           "description": "The level the robot climbed during endgame.",
@@ -337,6 +316,52 @@
             "Mid": "Middle",
             "Dep": "Depot Side"
           }
+        },
+        {
+          "title": "How Long To Climb?",
+          "description": "Rough estimate of the time it took to climb in seconds.",
+          "type": "number",
+          "required": false,
+          "code": "timeClimb",
+          "formResetBehavior": "reset",
+          "defaultValue": 0,
+          "min": 0
+        },
+        {
+          "title": "Was the robot defended?",
+          "description": "Was the robot defended during the match?",
+          "type": "boolean",
+          "required": false,
+          "code": "robotDefended",
+          "formResetBehavior": "reset",
+          "defaultValue": false
+        },
+        {
+          "title": "Mechanical Issue?",
+          "description": "Did the robot have a mechanical issue during the match?",
+          "type": "boolean",
+          "required": false,
+          "code": "mechIssue",
+          "formResetBehavior": "reset",
+          "defaultValue": false
+        },
+        {
+          "title": "Died?",
+          "description": "Did the robot die during the match?",
+          "type": "boolean",
+          "required": false,
+          "code": "died",
+          "formResetBehavior": "reset",
+          "defaultValue": false
+        },
+        {
+          "title": "Tipped/Fell Over",
+          "description": "Did the robot tip or fall over during the match?",
+          "type": "boolean",
+          "required": false,
+          "code": "tipped",
+          "formResetBehavior": "reset",
+          "defaultValue": false
         }
       ]
     },
@@ -344,11 +369,11 @@
       "name": "Postmatch",
       "fields": [
         {
-          "title": "Scoring Accuracy (in 20% steps)",
-          "description": "Rate the robot's scoring effectiveness. 0 for no scoring, 1 is 20%, 2 is 40%, etc.",
+          "title": "Scoring Effectiveness",
+          "description": "Rate the robot's scoring effectiveness.",
           "type": "range",
           "required": false,
-          "code": "scoringAcc",
+          "code": "scoringEff",
           "formResetBehavior": "reset",
           "defaultValue": 3,
           "min": 0,
@@ -379,8 +404,8 @@
             "Fast Driving": "Fast Driving",
             "Slow Intake": "Slow Intake",
             "Fast Intake": "Fast Intake",
-            "Slow Scoring": "Slow Scoring",
-            "Fast Scoring": "Fast Scoring",
+            "Inaccurate Scoring": "Inaccurate",
+            "Shooting While Moving": "Shooting While Moving",
             "Good at passing": "Good at passing",
             "In the way": "In the way of partners",
             "Good at pushing fuel": "Good at pushing fuel",
@@ -395,7 +420,15 @@
           "formResetBehavior": "reset",
           "defaultValue": "",
           "min": 0,
-          "max": 100
+          "max": 150
+        },
+        {
+          "title": "Version",
+          "type": "text",
+          "required": false,
+          "code": "ver",
+          "formResetBehavior": "preserve",
+          "defaultValue": "1.01"
         }
       ]
     }
