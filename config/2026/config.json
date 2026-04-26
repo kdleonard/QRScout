@@ -258,7 +258,7 @@
               "icon": "fuel"
             },
             {
-              "label": "Passing",
+              "label": "Passing from Neutral Zone",
               "code": "passing",
               "icon": "redo"
             },
@@ -266,6 +266,11 @@
               "label": "Defense",
               "code": "defense",
               "icon": "sword"
+            },
+            {
+              "label": "Passing from Opponent's Zone",
+              "code": "passingOpp",
+              "icon": "redo"
             },
             {
               "label": "Faffing/Stuck on Fuel",
